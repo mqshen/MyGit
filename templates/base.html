@@ -1,0 +1,73 @@
+{% from tornado.options import options %}
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>{% block title %}MyTask{% end %}</title>
+	    <link rel="stylesheet" href="{{ static_url("css/public.css")}}" type="text/css"/>
+	    <link rel="stylesheet" href="{{ static_url("css/main.css")}}" type="text/css"/>
+    </head>
+    <body class="{% block bodyClass %} {% end %}">
+        <div id="wrapper">
+            <div class="header header-logged-in true">
+                <div class="container clearfix">
+                    <a class="header-logo-invertocat">
+                        <span class="mega-octicon"></span>
+                    </a>
+                    <div class="divider-vertical"></div>
+                    <ul id="user-links">
+                        <li>
+                            <a href="{{options.domain}}/{{currentUser.url}}" class="name">
+                                <img height="20" src="" width="20">{{currentUser.name}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/new" id="new_repo" class="tooltipped downwards" original-title="Create a new repo">
+                                <span class="octicon octicon-repo-create"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/settings/profile" id="account_settings" class="tooltipped downwards" original-title="Account settings ">
+                                <span class="octicon octicon-tools"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltipped downwards" href="/logout" data-method="post" id="logout" original-title="Sign out">
+                                <span class="octicon octicon-log-out"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="site clearfix">
+                <div id="site-container" class="context-loader-container">
+                    <div class="container">
+                        {% block body %} fill by every page{% end %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+        </div>
+    <script src="{{ static_url("scripts/lib/jquery.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.core.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.button.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.select.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.form.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.behavior.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.popover.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.calendar.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.format.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.param.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.editor.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.editorTrigger.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.todo.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.html5fileuploader.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.imageView.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.autoAdd.js")}}" type="text/javascript"></script>
+    <script src="{{ static_url("scripts/lib/lily.timeago.js")}}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        {% block script %} $(function(){}) {% end %}
+    </script>
+    </body>
+</html>

@@ -1,0 +1,261 @@
+{% extends "../base.html" %}
+{% from tornado.options import options %}
+{% block title %}MyTask{% end %}
+
+{% block bodyClass %} logged_out  macintosh vis-public env-production  {% end %} 
+{% block body%}
+    <div class="hentry">
+        <div class="pagehead repohead instapaper_ignore readability-menu ">
+            <div class="container">
+                <div class="title-actions-bar">
+                    <h1 class="entry-title public">
+                        <span class="repo-label"><span>public</span></span>
+                        <span class="mega-octicon octicon-repo"></span>
+                        <span class="author vcard">
+                            <a href="/mqshen" class="url fn" itemprop="url" rel="author">
+                                <span itemprop="title">{{currentUser.url}}</span>
+                            </a>
+                        </span> /
+                        <strong><a href="/mqshen/MyTask" class="js-current-repository">{{repository.name}}</a></strong>
+                    </h1>
+                </div>
+                <ul class="tabs with-details-box">
+                    <li class="pulse-nav">
+                        <a href="/{{userUrl}}/{{repository.name}}/pulse" class="js-selected-navigation-item " rel="nofollow">
+                            <span class="octicon octicon-pulse"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}" class="js-selected-navigation-item selected">代码</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">网络</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">问题</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">图形</a>
+                    </li>
+                </ul>
+                <div id="repo_details" class="metabox clearfix" style="">
+                    <div class="repo-desc-homepage">
+                        <div id="repository_description" class="repository-description">
+                            <p>{{repository.description}}
+                            </p>
+                        </div>
+                        <div class="repository-homepage" id="repository_homepage">
+                        <p></p>
+                    </div>
+                </div>
+                <div class="url-box js-url-box">
+                    <ul class="native-clones">
+                        <li>
+                            <a href="http://mac.github.com" class="button minibutton " icon_class="octicon-device-desktop">
+                                <span class="octicon octicon-device-desktop"></span>Clone in Mac
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="clone-urls js-clone-urls ">
+                        <span class="http_clone_url clone-url-button js-clone-url-button selected">
+                            <a href="https://github.com/mqshen/MyTask.git" class="js-git-protocol-selector" data-permission="Read-Only">
+                                HTTP
+                            </a>
+                        </span>
+                        <span class="clone-url">
+                            <input type="text" readonly="" spellcheck="false" class="url-field js-url-field" 
+                            value="{{options.domain}}/{{userUrl}}/{{repository.name}}.git">
+                        </span>
+                        <span class="clone-url-button">
+                            <span class="js-zeroclipboard url-box-clippy zeroclipboard-button" 
+                                data-clipboard-text="{{options.domain}}/{{userUrl}}/{{repository.name}}.git" 
+                                data-copied-hint="copied!" title="copy to clipboard">
+                                <span class="octicon octicon-clippy"></span>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="tabnav">
+                <span class="tabnav-right">
+                    <ul class="tabnav-tabs">
+                        <li>
+                            <a href="/{{userUrl}}/{{repository.name}}/tags" 
+                                class="js-selected-navigation-item tabnav-tab">Tags
+                                <span class="counter blank">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </span>
+                <div class="tabnav-widget scope">
+                    <div class="select-menu js-menu-container js-select-menu js-branch-menu">
+                        <a class="minibutton select-menu-button js-menu-target" data-hotkey="w" data-ref="master">
+                            <span class="octicon octicon-branch"></span>
+                            <i>分支:</i>
+                            <span class="js-select-button">master</span>
+                        </a>
+                        <div class="select-menu-modal-holder js-menu-content js-navigation-container">
+                            <div class="select-menu-modal">
+                                <div class="select-menu-header">
+                                    <span class="select-menu-title">Switch branches/tags</span>
+                                    <span class="octicon octicon-remove-close js-menu-close"></span>
+                                </div> <!-- /.select-menu-header -->
+                                <div class="select-menu-filters">
+                                    <div class="select-menu-text-filter">
+                                        <input type="text" id="commitish-filter-field" 
+                                            class="js-filterable-field js-navigation-enable" placeholder="Filter branches/tags">
+                                    </div>
+                                <div class="select-menu-tabs">
+                                    <ul>
+                                        <li class="select-menu-tab">
+                                            <a href="#" data-tab-filter="branches" class="js-select-menu-tab">Branches</a>
+                                        </li>
+                                        <li class="select-menu-tab">
+                                            <a href="#" data-tab-filter="tags" class="js-select-menu-tab">Tags</a>
+                                        </li>
+                                    </ul>
+                                </div><!-- /.select-menu-tabs -->
+                            </div><!-- /.select-menu-filters -->
+                            <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket css-truncate">
+                                <div data-filterable-for="commitish-filter-field" data-filterable-type="substring">
+                                    <div class="select-menu-item js-navigation-item selected">
+                                        <span class="select-menu-item-icon octicon octicon-check"></span>
+                                        <a href="/{{userUrl}}/{{repository.name}}/tree/master" 
+                                            class="js-navigation-open select-menu-item-text js-select-button-text css-truncate-target" 
+                                            data-name="master" rel="nofollow" title="master">
+                                            master
+                                        </a>
+                                    </div> <!-- /.select-menu-item -->
+                                </div>
+                                <div class="select-menu-no-results">Nothing to show</div>
+                            </div> <!-- /.select-menu-list -->
+                            <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket css-truncate" 
+                                data-tab-filter="tags">
+                                <div data-filterable-for="commitish-filter-field" data-filterable-type="substring">
+                                </div>
+                                <div class="select-menu-no-results">Nothing to show</div>
+                            </div> <!-- /.select-menu-list -->
+                        </div> <!-- /.select-menu-modal -->
+                    </div> <!-- /.select-menu-modal-holder -->
+                </div> <!-- /.select-menu -->
+            </div> <!-- /.scope -->
+            <ul class="tabnav-tabs">
+                <li>
+                    <a href="/{{userUrl}}/{{repository.name}}" class="selected js-selected-navigation-item tabnav-tab" >
+                        文件
+                    </a>
+                </li>
+                <li>
+                    <a href="/mqshen/MyTask/commits/master" class="js-selected-navigation-item tabnav-tab" >
+                        提交
+                    </a>
+                </li>
+                <li>
+                    <a href="/{{userUrl}}/{{repository}}/branches" class="js-selected-navigation-item tabnav-tab" rel="nofollow">
+                        分支<span class="counter ">1</span></a>
+                </li>
+            </ul>
+        </div>
+        <div id="js-repo-pjax-container" class="container context-loader-container" data-pjax-container="">
+            <div id="slider">
+                <div class="frame-meta">
+                    <div class="breadcrumb">
+                        <span class="bold">
+                            <span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                                <a href="/{{userUrl}}/{{repository.name}}" class="js-slide-to" data-branch="master" data-direction="back" itemscope="url">
+                                    <span itemprop="title">
+                                        {{repository.name}}
+                                    </span>
+                                </a>
+                            </span>
+                        </span>
+                        <span class="separator"> / </span>
+                    </div>
+                </div>
+                <div class="frames" style="min-height: 335px;">
+                    <div class="frame" data-type="tree">
+                        <div class="bubble tree-browser-wrapper" id="trees">
+                            <table class="tree-browser css-truncate" cellpadding="0" cellspacing="0">
+                                <thead>
+                                </thead>
+                                <tbody class="tree-entries js-deferred-content" data-url="/mqshen/{{repository.name}}/tree-commits/master" 
+                                    id="file_container">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="files" class="bubble" style="display:none">
+                            <div class="file">
+                                <pre class="blob-wrapper data type-python js-blob-data" id="file_content">
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block script %}
+$(function(){
+var $rowContainer = $('#file_container')
+var $fileContent = $('#file_content')
+var $fileDisplay = $('#files')
+var $treeDisplay = $('#trees')
+function callback(data, fileType) {
+    if(fileType === "tree") {
+        $fileDisplay.hide()
+        $treeDisplay.show()
+        $rowContainer.empty() 
+        
+        for(var i in data.content) {
+            var file = data.content[i]
+            var iconClass = "octicon-file-directory"
+            var fileType = "tree"
+            if(file.type == 1) {
+                iconClass = "octicon-file-text"
+                fileType = "blob"
+            }
+                
+            
+                
+            var $row = $('<tr><td class="icon"><span class="octicon ' + iconClass + '"></span>'
+                + '</td><td class="content"><a href="/{{userUrl}}/{{repository.name}}/' + fileType + '/master/' + file.path
+                + '" data-type="' + fileType + '"class="js-directory-link js-slide-to css-truncate-target" '
+                + 'id="44290cefe42924d04a92d99428a95f27-ddbd2bca48b8340ceaffdb95edecc1ec066b5ef1" '
+                + 'title="' + file.name + '" data-toggle="truncate">' + file.name + '</a></td>'
+                + '<td class="age"><time class="js-relative-date timeago" datetime="2013-05-18T06:21:21-07:00" ></time></td>'
+                + '<td class="message"><a href="/{{userUrl}}/{{repository.name}}/commit/" class="message"></a>'
+                + '[<span rel="author">GoldRatio</span>]'
+                + '</td></tr>')
+            $rowContainer.append($row)
+        }
+    }
+    else {
+        $fileDisplay.show()
+        $treeDisplay.hide()
+        $fileContent.text(data.fileContent)
+    }
+}
+function queryFiles(path, fileType){
+    $.lily.ajax({
+        url : path,
+		type: 'post',
+        processResponse : function(reponseData) {callback(reponseData, fileType)}
+	});
+}
+$rowContainer.data("doProcess", queryFiles)
+queryFiles('/{{userUrl}}/{{repository.name}}/tree-commit/master', "tree")
+
+$(document).on('click.truncate.data-api', '[data-toggle=truncate]', function (e) {
+    e.preventDefault()
+    var $btn = $(e.target)
+    var $target = $btn.closest('tbody')
+    var url = $btn.attr("href")
+    var fileType = $btn.attr("data-type")
+    queryFiles(url, fileType)
+})
+
+})
+
+{% end %}

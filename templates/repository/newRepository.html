@@ -1,0 +1,88 @@
+{% extends "../base.html" %}
+
+{% block title %}MyTask{% end %}
+
+{% block bodyClass %} logged_in page-new-repo macintosh  env-production {% end %} 
+{% block body%}
+    <div class="new-repo-container">
+        <form method="post" action="/">
+            <div class="owner-reponame clearfix">
+                <div class="icon-preview icon-preview-public js-icon-preview-public" style="display: block;">
+                    <span class="label">public</span>
+                    <span class="mega-octicon octicon-repo"></span>
+                </div>
+                <div class="icon-preview icon-preview-private js-icon-preview-private" style="display: none;">
+                    <span class="label"><span>private</span></span>
+                    <span class="mega-octicon octicon-lock"></span>
+                </div>
+                <dl class="form reponame">
+                    <dt>
+                        <div class="fieldWithErrors">
+                            <label autocapitalize="off" class="js-repo-name short with-permission-fields" 
+                                data-autocheck-url="/repositories/check-name" error="false" for="repository_name" 
+                                maxlength="100" name="customer[custom_fields][github_repository_name]" tabindex="2" style="">
+                                资源库名称
+                            </label>
+                        </div>
+                    </dt>
+                    <dd>
+                        <div class="fieldWithErrors">
+                            <input autocapitalize="off" class="js-repo-name short with-permission-fields" 
+                                data-autocheck-url="/repositories/check-name?owner=mqshen" error="false" 
+                                id="repository_name" maxlength="100" name="name" data-toggle="remote"
+                                size="100" tabindex="2" type="text" style="">
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+            <div class="with-permission-fields" style="">
+                <p class="subdued">
+                    好的名称是短而好记的
+                </p>
+                <!-- description field -->
+                <dl class="form">
+                    <dt>
+                        <label for="repository_description">描述</label> <span class="note">(可选)</span>
+                    </dt>
+                    <dd>
+                        <div class="fieldWithErrors">
+                            <input class="long" id="repository_description" name="description" size="30" tabindex="4" type="text" data-toggle="remote">
+                        </div>
+                    </dd>
+                </dl>
+                <hr>
+                    <!-- team select box -->
+                    <!-- privacy options -->
+                    <div class="form-checkbox">
+                        <label>
+                            <input name="public" value="true" type="radio" checked="checked" class="js-privacy-toggle" tabindex="5" data-toggle="remote">
+                            公共
+                        </label>
+                        <span class="mega-octicon octicon-repo"></span>
+                        <span class="note">
+                            所有人都能访问你的资源库
+                        </span>
+                    </div>
+                    <div class="form-checkbox">
+                        <label>
+                            <input name="public" value="false" type="radio" class="js-privacy-toggle" data-toggle="remote">
+                            私有
+                        </label>
+                        <span class="mega-octicon octicon-lock"></span>
+                        <span class="note">
+                            你可以选择那些人可以访问你的资源库
+                        </span>
+                    </div>
+                </hr>
+            </div>
+            <div class="rule"></div>
+            <button data-toggle="submit" class="button primary first-in-line" data-disable-with="正在创建..." tabindex="7" >
+                创建资源库
+            </utton
+        </form>
+    </div>
+{% end %}
+
+{% block script %}
+
+{% end %}

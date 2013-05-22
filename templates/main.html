@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}MyTask{% end %}
+
+{% block bodyClass %} logged_in page-dashboard macintosh  env-production {% end %} 
+{% block body%}
+    <div id="dashboard">
+        <div class="news">
+        </div>
+        <div class="dashboard-sidebar">
+            <div class="repos" id="your_repos">
+                <div class="top-bar">
+                    <a href="/new" class="minibutton primary new-repo">
+                        <span class="octicon octicon-repo-create"></span>
+                        新的资源库
+                    </a>
+                    <h2>你的资源库<em>({{len(repositories)}})</em></h2>
+                </div>
+                <ul id="repo_listing" class="repo_list js-repo-list">
+                    {% for repository in repositories %}
+                        <li class="public source">
+                            <a href="{{repository.own.url}}/{{repository.name}}" class="css-truncate">
+                                <span class="octicon octicon-repo"></span>
+                                <span class="owner css-truncate-target" title="{{repository.own.url}}">{{repository.own.url}}</span>/
+                                <span class="repo css-truncate-target" title="{{repository.own.name}}">{{repository.name}}</span>
+                                <span class="arrow"></span>
+                            </a>
+                        </li>
+                    {% end %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block script %}
+
+{% end %}
+

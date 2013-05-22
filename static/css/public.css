@@ -1,0 +1,130 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body, input, select, textarea, button {
+    font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
+    line-height: 1.4;
+}
+input, button, textarea {
+margin: 0;
+padding: 0;
+font-size: 100%;
+font-family: inherit;
+}
+
+body {
+    color: #333333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+font-weight: bold;
+}
+label, input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="tel"], textarea {
+font-size: 15px;
+}
+input[type="text"], #adv_code_search .search-page-label, input[type="password"], input[type="email"], input[type="number"], input[type="tel"], textarea {
+min-height: 34px;
+padding: 7px 8px;
+outline: none;
+color: #333;
+background-color: #fff;
+background-repeat: no-repeat;
+background-position: right center;
+border: 1px solid #ccc;
+border-radius: 3px;
+box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+transition: all 0.15s ease-in;
+-webkit-transition: all 0.15s ease-in 0;
+vertical-align: middle;
+}
+p {
+margin: 1em 0;
+}
+.button.primary, .minibutton.primary {
+color: #fff;
+text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+background-color: #60b044;
+background-image: -moz-linear-gradient(#8add6d, #60b044);
+background-image: -webkit-linear-gradient(#8add6d, #60b044);
+background-image: linear-gradient(#8add6d, #60b044);
+background-repeat: repeat-x;
+border-color: #5ca941;
+}
+.button, .minibutton {
+outline: none;
+}
+.button, .minibutton {
+position: relative;
+display: inline-block;
+padding: 7px 15px;
+font-size: 13px;
+font-weight: bold;
+color: #333;
+text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+white-space: nowrap;
+background-color: #eaeaea;
+background-image: -moz-linear-gradient(#fafafa, #eaeaea);
+background-image: -webkit-linear-gradient(#fafafa, #eaeaea);
+background-image: linear-gradient(#fafafa, #eaeaea);
+background-repeat: repeat-x;
+border-radius: 3px;
+border: 1px solid #ddd;
+border-bottom-color: #c5c5c5;
+box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+vertical-align: middle;
+cursor: pointer;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+-webkit-appearance: none;
+}
+.minibutton {
+padding: 0 10px;
+line-height: 24px;
+box-shadow: none;
+}
+.octicon-repo-create:before {
+content: '\f003';
+}
+.octicon-tools:before {
+content: '\f032';
+}
+.octicon-log-out:before {
+content: '';
+}
+.octicon-repo:before {
+content: '\f001';
+}
+.octicon-lock:before {
+content: '\f06a';
+}
+label {
+font-weight: bold;
+}
+a {
+color: #4183c4;
+text-decoration: none;
+}
+.octicon-pulse:before {
+content: '\f081';
+}
+.octicon-clippy:before {
+content: '\f035';
+}
+.octicon-device-desktop:before {
+content: '\f27c';
+}
+.octicon-file-directory:before {
+content: '\f016';
+}
+.octicon-file-text:before {
+content: '\f011';
+}
