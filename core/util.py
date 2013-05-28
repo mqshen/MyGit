@@ -5,8 +5,7 @@ Created on May 2, 2013
 '''
 from sqlalchemy.orm import class_mapper
 from tornado.options import options
-import json
-
+from lib.vcs.backends.base import BaseChangeset
 from core.database import db
 
 def serialize(model):
@@ -23,9 +22,17 @@ def serialize(model):
                 else:
                     result.update({key: serialize(value)})
             columns.extend(model.eagerRelation)
+    elif hasattr(model, '__json__'):
+        return model.__json__()
     else:
         columns = [c for c in model.__dict__]
-        result = dict((c, getattr(model, c)) for c in columns)
+        result = {}
+        for c in columns:
+            value = getattr(model, c)
+            if hasattr(value, '__json__'):
+                result.update({c: value.__json__()})
+            else:
+                result.update({c: value})
         #result = json.dumps(model, default=lambda o: o.__dict__)
     # then we return their values in a dict
     

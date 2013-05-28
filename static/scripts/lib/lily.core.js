@@ -197,27 +197,14 @@ $.extend( $.lily, {
         })
         return orginRequestData
     },
-    showWait : function(target) {
-    	var waitObj = $('<a class="wait" href="javascript:;">nbsp;</a>');
-
-    	waitObj.css({
-    		width: target.width(),
-    		height: target.height(),
-    		float: target.css("float"),
-            padding: target.css("padding"),
-    		margin: target.css("margin")
-    	})
-        if(target.css("display") == 'inline-block')
-            waitObj.css({
-                display: target.css("display"),
-                "vertical-align": "top"
-            })
-    	target.hide();
-    	waitObj.insertAfter(target);
+    showWait : function($target) {
+    	var waitObj = $('<div id="js-frame-loading-template" class="frame frame-loading large-loading-area" style="display: block; margin-left: 0px;"><img class="js-frame-loading-spinner" src="/static/images/octocat-spinner-128.gif" height="64" width="64" style=""></div>');
+        $target.children().hide()
+    	waitObj.appendTo($target);
     },
-    hideWait: function(target) {
-    	target.next('.wait').remove();
-    	target.css("display", "")
+    hideWait: function($target) {
+    	$target.find('#js-frame-loading-template').remove();
+        $target.children().show()
     },
 
     fillHtml: function($obj, data) {

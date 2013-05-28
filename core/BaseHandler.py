@@ -49,7 +49,6 @@ class BaseHandler(tornado.web.RequestHandler):
                     result.update({key : serialize(item)})
                 else:
                     result.update({key : item})
-        print(result)
         self.write(json_encode(result))
     
     def writeFailedResult(self):

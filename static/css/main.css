@@ -640,9 +640,8 @@ border-radius: 3px;
 .tree-browser {
 width: 100%;
 margin: 0;
-border-bottom: 1px solid #cacaca;
-border-left: none;
-border-right: none;
+border: 1px solid #cacaca;
+border-top: none;
 }
 table {
 border-collapse: collapse;
@@ -655,12 +654,9 @@ width: 17px;
 padding-right: 2px;
 padding-left: 10px;
 }
-.tree-browser td:first-child {
-border-left: 1px solid #cacaca;
-}
 .tree-browser td {
 background: #f8f8f8;
-border-bottom: 1px solid #eee;
+border-bottom: 1px solid #cacaca;
 padding: 7px 3px;
 color: #484848;
 vertical-align: middle;
@@ -676,3 +672,465 @@ max-width: 420px;
 color: #80a6cd;
 }
 .clone-url-button>a:hover,.clone-url-button>a:active{z-index:3;color:#fff;text-decoration:none;text-shadow:0 -1px 0 rgba(0,0,0,0.25);background-color:#3072b3;background-image:-moz-linear-gradient(#599bcd, #3072b3);background-image:-webkit-linear-gradient(#599bcd, #3072b3);background-image:linear-gradient(#599bcd, #3072b3);background-repeat:repeat-x;border-color:#2a65a0}
+.callout {
+margin: 15px 0;
+padding: 10px;
+font-size: 13px;
+color: #8d8d6d;
+background: #fffef1;
+border: 1px solid #e5e2c8;
+border-radius: 4px;
+}
+.callout h2 {
+margin: 0;
+font-size: 16px;
+font-weight: 300;
+}
+.empty-repo p.bigmessage {
+color: #666;
+}
+p.bigmessage {
+margin: 30px 0;
+text-align: center;
+font-size: 16px;
+color: #333;
+}
+.empty-repo .new-repo-cli-container {
+padding-top: 10px;
+text-align: center;
+}
+.markdown-body {
+font-size: 15px;
+line-height: 1.7;
+overflow: hidden;
+}
+.markdown-body>*:first-child {
+margin-top: 0 !important;
+}
+.empty-repo .new-repo-cli-container pre {
+text-align: left;
+}
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+margin: 1em 0 15px;
+padding: 0;
+font-weight: bold;
+-webkit-font-smoothing: antialiased;
+cursor: text;
+position: relative;
+}
+.commit-tease .sha-block {
+float: right;
+color: #888;
+}
+.commit-tease .zeroclipboard-link {
+float: right;
+margin-left: 5px;
+margin-top: -2px;
+}
+.zeroclipboard-link {
+color: #4183c4;
+cursor: pointer;
+}
+.commit-tease {
+padding: 8px 8px 0;
+background: #e6f1f6;
+border: 1px solid #b7c7cf;
+border-bottom-color: #d8e6ec;
+border-top-right-radius: 2px;
+border-top-left-radius: 2px;
+}
+.commit-tease .commit-meta {
+margin-left: -8px;
+width: 100%;
+padding: 8px;
+background: #fff;
+border-top: 1px solid #d8e6ec;
+}
+.commit-tease p.commit-title {
+margin: 0 0 6px 0;
+}
+.commit .commit-title, .commit .commit-title a {
+color: #4e575b;
+}
+.commit-tease .authorship .gravatar {
+margin: -2px 3px 0 0;
+vertical-align: middle;
+border-radius: 3px;
+}
+#slider .frames .frame-loading {
+height: 100%;
+}
+.large-loading-area {
+text-align: center;
+padding: 100px 0;
+}
+h3.commit-group-heading {
+margin: 15px 0 0 0;
+padding: 5px 8px;
+font-size: 13px;
+color: #3a505b;
+text-shadow: 0 1px white;
+background: #e6f1f6;
+border: 1px solid #c5d5dd;
+border-top-right-radius: 4px;
+border-top-left-radius: 4px;
+}
+.commit-group {
+list-style-type: none;
+margin: 0 0 15px 0;
+background: #f7fbfc;
+border: 1px solid #c5d5dd;
+border-top: none;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
+}
+.commit-group-item:nth-child(2n+1) {
+background: #fff;
+}
+.commit-group-item:first-child {
+border-top: none;
+}
+.commit-group-item {
+position: relative;
+padding: 8px 8px 8px 52px;
+border-top: 1px solid #e2eaee;
+}
+.commit-group-item .gravatar {
+float: left;
+margin-left: -44px;
+border-radius: 4px;
+}
+.commit-group-item .commit-title {
+margin: 1px 0 1px 0;
+font-size: 14px;
+font-weight: bold;
+color: #333;
+}
+.commit-group-item .commit-links {
+position: absolute;
+top: 7px;
+right: 8px;
+white-space: nowrap;
+}
+.commit-group-item .gobutton {
+float: left;
+height: 22px;
+padding: 0 7px;
+line-height: 22px;
+font-size: 11px;
+color: #4e575b;
+text-shadow: 0 1px rgba(255,255,255,0.5);
+background-color: #ddecf3;
+background-image: -moz-linear-gradient(#eff6f9, #ddecf3);
+background-image: -webkit-linear-gradient(#eff6f9, #ddecf3);
+background-image: linear-gradient(#eff6f9, #ddecf3);
+background-repeat: repeat-x;
+border: 1px solid #cedee5;
+border-radius: 3px;
+}
+.commit-group-item:nth-child(2n+1) .gobutton {
+border-color: #d5dcdf;
+background-color: #e3eaed;
+background-image: -moz-linear-gradient(#f2f5f6, #e3eaed);
+background-image: -webkit-linear-gradient(#f2f5f6, #e3eaed);
+background-image: linear-gradient(#f2f5f6, #e3eaed);
+background-repeat: repeat-x;
+}
+
+.commit-group-item .gobutton>.sha, .commit-group-item.navigation-focus .gobutton:hover>.sha {
+display: inline-block;
+height: 22px;
+margin-right: -3px;
+}
+.commit-group-item .gobutton>.sha .octicon, .commit-group-item.navigation-focus .gobutton:hover>.sha .octicon {
+position: relative;
+top: 1px;
+border-radius: 30px;
+border: 1px solid #CFDEE5;
+background-color: rgba(255,255,255,0.5);
+color: #91a6b1;
+margin-left: 5px;
+width: 16px;
+text-align: center;
+}
+.commit .sha-block, .commit .sha {
+font-size: 11px;
+font-family: Monaco, "Liberation Mono", Courier, monospace;
+}
+ul.hotness-legend {
+float: right;
+margin: 10px 0 0 0;
+}
+ul.hotness-legend li.text {
+margin: 0 10px;
+height: 23px;
+line-height: 23px;
+}
+ul.hotness-legend li {
+list-style-type: none;
+float: left;
+margin: 0;
+font-size: 11px;
+color: #999;
+}
+ul.hotness-legend .hot .behind {
+background-color: #ff704f;
+}
+ul.hotness-legend .hot .ahead {
+background-color: #811201;
+}
+ul.hotness-legend .fresh .behind {
+background-color: #ffd266;
+}
+ul.hotness-legend .fresh .ahead {
+background-color: #b69e67;
+}
+ul.hotness-legend .stale .behind {
+background-color: #b2d0dd;
+}
+ul.hotness-legend .stale .ahead {
+background-color: #1e4152;
+}
+ul.hotness-legend .old .behind {
+background-color: #d0d0d0;
+}
+ul.hotness-legend .old .ahead {
+background-color: #7a7a7a;
+}
+ul.hotness-legend .ahead, ul.hotness-legend .behind {
+display: block;
+margin: 1px 0 0 0;
+width: 15px;
+height: 10px;
+}
+table.branches {
+margin: 15px 0 0 0;
+width: 100%;
+}
+table.branches tr.base td.name {
+padding-left: 10px;
+}
+table.branches tr.base td {
+background: #333;
+color: #fff;
+}
+table.branches tr td {
+padding: 5px 0;
+border-bottom: 1px solid #ddd;
+}
+table.branches tr.base td.actions {
+padding-right: 10px;
+color: #eee;
+}
+.branches div.actions {
+float: right;
+}
+#files .file, .file-box {
+border: 1px solid #ccc;
+margin-bottom: 13px;
+position: relative;
+}
+#files .file .meta, .file-box .meta {
+overflow: hidden;
+padding: 5px 10px;
+font-size: 12px;
+height: 33px;
+text-align: left;
+color: #555;
+text-shadow: 0 1px 0 #fff;
+border-bottom: 1px solid #d8d8d8;
+background-color: #eaeaea;
+background-image: -moz-linear-gradient(#fafafa, #eaeaea);
+background-image: -webkit-linear-gradient(#fafafa, #eaeaea);
+background-image: linear-gradient(#fafafa, #eaeaea);
+background-repeat: repeat-x;
+}
+#files .file .meta .info, .file-box .meta .info {
+float: left;
+height: 33px;
+line-height: 33px;
+font-family: Monaco, "Liberation Mono", Courier, monospace;
+}
+#files .file .meta .info span.diffstat {
+height: 16px;
+padding: 3px 6px;
+}
+#files .file .meta .info span:first-child, #files .file .meta .info .icon+span, #files .file .meta .info .diffstat+span, .file-box .meta .info span:first-child, .file-box .meta .info .icon+span, .file-box .meta .info .diffstat+span {
+border-left: 0 none;
+box-shadow: inset 0 0 0 transparent;
+margin-left: 0;
+padding-left: 0;
+}
+#files .file .meta .actions, .file-box .meta .actions {
+float: right;
+height: 33px;
+line-height: 33px;
+}
+.file-code {
+width: 100%;
+background-color: #fff;
+border-collapse: separate;
+}
+.highlight .gc {
+color: #999;
+background-color: #EAF2F5;
+}
+.file-diff-line, .file-code-lines {
+position: relative;
+text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+}
+.gc .diff-line-num {
+background-color: #f3f3ff;
+border-color: #e4e4ff;
+}
+.hide-line-numbers .diff-line-num {
+-webkit-user-select: none;
+-moz-user-select: none;
+user-select: none;
+}
+.diff-line-num, .blob-line-nums {
+width: 1%;
+padding-left: 8px;
+padding-right: 8px;
+font-family: Consolas, "Liberation Mono", Courier, monospace;
+line-height: 18px;
+color: #aaa;
+color: rgba(0,0,0,0.3);
+vertical-align: top;
+text-align: right;
+border-right: 1px solid #e5e5e5;
+}
+.highlight .add {
+color: #000000;
+background-color: #ddffdd;
+}
+.highlight .del {
+color: #000000;
+background-color: #ffdddd;
+}
+.highlight .context {
+color: #999;
+background-color: #EAF2F5;
+}
+.file-diff-line:hover {background-color:#f8eec7}
+.diff-line-code {
+padding-left: 10px;
+padding-right: 10px;
+font-family: Consolas, "Liberation Mono", Courier, monospace;
+font-size: 13px;
+color: #333;
+white-space: nowrap;
+}
+#readme {
+padding: 3px;
+background: #EEE;
+border-radius: 3px;
+}
+#readme span.name {
+font-size: 16px;
+line-height: 20px;
+font-weight: bold;
+padding: 10px 10px;
+color: #555;
+text-shadow: 0 1px 0 #fff;
+display: block;
+border: 1px solid #CACACA;
+border-bottom: 0 none;
+background-color: #eaeaea;
+background-image: -moz-linear-gradient(#fafafa, #eaeaea);
+background-image: -webkit-linear-gradient(#fafafa, #eaeaea);
+background-image: linear-gradient(#fafafa, #eaeaea);
+background-repeat: repeat-x;
+}
+#readme .markdown-body, #readme .plain {
+background-color: #fff;
+border: 1px solid #CACACA;
+padding: 30px;
+}
+.markdown-body {
+font-size: 15px;
+line-height: 1.7;
+overflow: hidden;
+}
+#files .file .meta .info span.icon, #files .file .meta .info span.diffstat, .file-box .meta .info span.icon {
+line-height: 0;
+display: inline-block;
+margin: 5px 5px 0 0;
+padding: 3px;
+background: #f7f7f7;
+border: 1px solid #ccc;
+border-right-color: #e5e5e5;
+border-bottom-color: #e5e5e5;
+border-radius: 3px;
+}
+#files .file .meta .info span, .file-box .meta .info span {
+padding-left: 9px;
+margin-left: 5px;
+border-left: 1px solid #c1c1c1;
+box-shadow: inset 1px 0 0 #fff;
+}
+.inline-review-comment, .file .highlight, .code-list-item .file-box, .blob-wrapper {
+overflow: auto;
+overflow-x: auto;
+overflow-y: hidden;
+}
+.file-code {
+width: 100%;
+background-color: #fff;
+border-collapse: separate;
+}
+.blob-line-nums {
+line-height: 1;
+padding: 5px 0;
+}
+.diff-line-num, .blob-line-nums {
+width: 1%;
+padding-left: 8px;
+padding-right: 8px;
+font-family: Consolas, "Liberation Mono", Courier, monospace;
+line-height: 18px;
+color: #aaa;
+color: rgba(0,0,0,0.3);
+vertical-align: top;
+text-align: right;
+border-right: 1px solid #e5e5e5;
+}
+.highlight .sd {
+color: #d14;
+}
+.highlight .c {
+color: #999988;
+font-style: italic;
+}
+.highlight .kn {
+font-weight: bold;
+}
+.highlight .nn {
+color: #555555;
+}
+.highlight .nc {
+color: #445588;
+font-weight: bold;
+}
+.highlight .nb {
+color: #0086B3;
+}
+.highlight .nf {
+color: #990000;
+font-weight: bold;
+}
+.highlight .kt {
+color: #445588;
+font-weight: bold;
+}
+.highlight .cm {
+color: #999988;
+font-style: italic;
+}
+.highlight .cp {
+color: #999999;
+font-weight: bold;
+}
+.highlight .k {
+font-weight: bold;
+}

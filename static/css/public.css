@@ -128,3 +128,12 @@ content: '\f016';
 .octicon-file-text:before {
 content: '\f011';
 }
+.octicon-arrow-small-right:before {
+content: '\f071';
+}
+.octicon-pulse:before {
+content: '\f085';
+}
+.octicon-book:before {
+content: '\f007';
+}

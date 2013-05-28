@@ -10,18 +10,22 @@ import logging
 import tornado
 from tornado.options import options
 from tornado.web import HTTPError
-from core.BaseHandler import BaseHandler 
-from core import subprocessio
+from core.BaseHandler import BaseHandler
 import core.web 
 from forms import Form, TextField, ListField, IntField, BooleanField
 from datetime import datetime
 from core.database import db
-import pygit2
-import json
-import pinyin
 from subprocess import Popen, PIPE, STDOUT
 import subprocess
-
+from stat import S_ISDIR
+from lib.vcs.backends.git import GitRepository
+from lib.vcs.backends.base import EmptyChangeset
+from lib import diffs
+import markdown
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
+from lib.helpers import CodeHtmlFormatter 
 
 class RepositoryForm(Form):
     name = TextField('name')
@@ -54,7 +58,7 @@ class RepositoryHandler(BaseHandler):
         db.session.commit()
         repositoryPath = options.repositoryPath 
         filePath = '%s/%s/%s'%(repositoryPath, currentUser.url, form.name.data)
-        subprocess.call('git init --bare "%s" ' % filePath, shell=True)
+        GitRepository(filePath, create= True, bare= True)
         self.writeSuccessResult(repository, successUrl='/%s/%s'%(currentUser.url, repository.name))
 
 class RepositoryNewHandler(BaseHandler):
@@ -72,31 +76,44 @@ class RepositoryDetailHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, userUrl, repositoryName):
         repository = Repository.query.join(Repository.users).filter(Repository.name==repositoryName, User.url==userUrl).first()
+        currentUser = self.current_user
         if not repository:
             raise HTTPError(404)
 
-        self.render("repository/repositoryDetail.html", repository= repository, userUrl= userUrl)
+        repositoryPath = options.repositoryPath 
+        filePath = '%s/%s/%s'%(repositoryPath, currentUser.url, repository.name)
+        repo = GitRepository(filePath)
+        if repo.revisions:
+            lastCommit = repo.get_changeset('HEAD')
+            try:
+                readmeMarkdown = lastCommit.get_node('README.md')
+                readme = markdown.markdown(readmeMarkdown._blob.data.decode("utf-8"))
+            except exception:
+                readme = ""
+            self.render("repository/repositoryDetail.html", repository= repository, userUrl= userUrl, lastCommit= lastCommit, readme= readme)
+        else:
+            self.render("repository/repositoryEmpty.html", repository= repository, userUrl= userUrl)
 
     @tornado.web.authenticated
     def post(self):
         self.redirect("/")
 
 class RepositoryFile(object):
-    def __init__(self, line, path = None):
-        items = line.split()
-        self.id = items[0]
-        if items[1] == 'tree':
+    def __init__(self, name, stat, id, path = None):
+        self.id = str(id)
+        if S_ISDIR(stat):
             self.type = 0
         else:
             self.type = 1
-        self.commit = items[2]
-        name = items[3]
-        self.path = name
-        if path is not None:
-            name = name[len(path)+1:]
-        self.name = name
+        self.stat = stat
+        self.commit = name.decode("utf-8")
+        self.name = name.decode("utf-8")
+        if path:
+            self.path = "%s/%s"%(path, self.name)
+        else:
+            self.path = self.name
 
-class RepositoryCommitHandler(BaseHandler):
+class RepositoryMasterHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, userUrl, repositoryName, tag):
         self.post(userUrl, repositoryName, tag)
@@ -107,23 +124,12 @@ class RepositoryCommitHandler(BaseHandler):
         if not repository:
             raise HTTPError(404)
 
-        repositoryPath = options.repositoryPath 
+        repositoryPath = options.repositoryPath
         filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
-        proc = Popen('git --git-dir %s ls-tree "%s"' % (filePath, tag) ,
-            shell = True,
-            stdout=PIPE, 
-            stderr=STDOUT, 
-            close_fds=True)
-
-        files = []
-        while True:
-            output = proc.stdout.readline()
-            if not output or proc.returncode is not None or len(output) == 0:
-                break
-            line = output.decode('utf-8').strip()
-            files.append(RepositoryFile(line))
-        files = sorted(files, key=lambda repository: repository.type)
-        self.writeSuccessResult(files)
+        repo = GitRepository(filePath)
+        head = repo.get_changeset('HEAD')
+        nodes = head.get_nodes('/')
+        self.writeSuccessResult(nodes)
 
 
 class RepositoryCommandHandler(BaseHandler):
@@ -135,7 +141,7 @@ class RepositoryCommandHandler(BaseHandler):
 
         repositoryPath = options.repositoryPath 
         filePath = '%s/%s/%s'%(repocurrentUser.urlsitoryPath, userUrl, repositoryName)
-        repo = pygit2.Repository(filePath)
+        repo = GitRepository(filePath)
 
         self.render("repository/repositoryDetail.html", repository= repository, userUrl= userUrl)
 
@@ -272,21 +278,10 @@ class RepositoryTreeHandler(BaseHandler):
 
         repositoryPath = options.repositoryPath 
         filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
-        proc = Popen('git --git-dir %s ls-tree "%s" %s/' % (filePath, tag, path) ,
-            shell = True,
-            stdout=PIPE, 
-            stderr=STDOUT, 
-            close_fds=True)
-
-        files = []
-        while True:
-            output = proc.stdout.readline()
-            if not output or proc.returncode is not None or len(output) == 0:
-                break
-            line = output.decode('utf-8').strip()
-            files.append(RepositoryFile(line, path))
-        files = sorted(files, key=lambda repository: repository.type)
-        self.writeSuccessResult(files)
+        repo = GitRepository(filePath)
+        head = repo.get_changeset(tag)
+        nodes = head.get_nodes(path)
+        self.writeSuccessResult(nodes)
 
 class RepositoryBlobHandler(BaseHandler):
     @tornado.web.authenticated
@@ -301,25 +296,101 @@ class RepositoryBlobHandler(BaseHandler):
 
         repositoryPath = options.repositoryPath 
         filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
-        proc = Popen('git --git-dir %s show "%s:%s" ' % (filePath, tag, path) ,
-            shell = True,
-            stdout=PIPE, 
-            stderr=STDOUT, 
-            close_fds=True)
+        repo = GitRepository(filePath)
+        head = repo.get_changeset(tag)
+        node = head.get_node(path)
+        
+        lexer = get_lexer_by_name(node.lexer_alias, stripall=True)
+        formatter = CodeHtmlFormatter(linenos=True, cssclass="file-code file-diff")
+        code = highlight(node._blob.data.decode("utf-8"), lexer, formatter)
+        self.writeSuccessResult(node, highlight = code)
 
-        output = proc.stdout.read()
+class RepositoryCommitsHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, userUrl, repositoryName, tag):
+        repository = Repository.query.join(Repository.users).filter(Repository.name==repositoryName, User.url==userUrl).first()
+        currentUser = self.current_user
+        self.render("repository/repositoryCommits.html", repository= repository, userUrl= userUrl)
 
-        self.writeSuccessResult(fileContent=output.decode('utf-8'))
+    @tornado.web.authenticated
+    def post(self, userUrl, repositoryName, tag):
+        repository = Repository.query.join(Repository.users).filter(Repository.name==repositoryName, User.url==userUrl).first()
+        if not repository:
+            raise HTTPError(404)
+
+        repositoryPath = options.repositoryPath 
+        filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
+        repo = GitRepository(filePath)
+        collection = repo.get_changesets(start=0, branch_name=tag, reverse= True)
+        page_revisions = [repo[x.raw_id] for x in collection]
+        self.writeSuccessResult(page_revisions)
+
+class RepositoryCommitHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, userUrl, repositoryName, raw_id):
+        repository = Repository.query.join(Repository.users).filter(Repository.name==repositoryName, User.url==userUrl).first()
+        if not repository:
+            raise HTTPError(404)
+        currentUser = self.current_user
+
+        repositoryPath = options.repositoryPath 
+        filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
+        repo = GitRepository(filePath)
+        changeset = repo.get_changeset(raw_id)
+        cs2 = changeset.raw_id
+        cs1 = changeset.parents[0].raw_id if changeset.parents else EmptyChangeset()
+
+        diff = repo.get_diff(cs1, cs2)
+        diff_processor = diffs.DiffProcessor(diff, vcs= repo.alias, format='gitdiff')
+        
+        _parsed = diff_processor.prepare()
+        diff_lines = diff_processor.parsed_diff
+                    
+        self.render("repository/repositoryCommit.html", repository= repository, userUrl= userUrl, raw_id=raw_id, diff_lines= diff_lines)
+
+    @tornado.web.authenticated
+    def post(self, userUrl, repositoryName, tag):
+        repository = Repository.query.join(Repository.users).filter(Repository.name==repositoryName, User.url==userUrl).first()
+        if not repository:
+            raise HTTPError(404)
+
+        repositoryPath = options.repositoryPath 
+        filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
+        repo = GitRepository(filePath)
+        collection = repo.get_changesets(start=0, branch_name=tag)
+        page_revisions = [repo[x.raw_id] for x in collection]
+        self.writeSuccessResult(page_revisions)
+
+class RepositoryBranchesHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, userUrl, repositoryName):
+        self.post(userUrl, repositoryName)
+
+    @tornado.web.authenticated
+    def post(self, userUrl, repositoryName):
+        repository = Repository.query.join(Repository.users).filter(Repository.name==repositoryName, User.url==userUrl).first()
+        if not repository:
+            raise HTTPError(404)
+
+        repositoryPath = options.repositoryPath 
+        filePath = '%s/%s/%s'%(repositoryPath , userUrl, repositoryName)
+        repo = GitRepository(filePath)
+        branches = repo.branches
+        brancheArray = [(branch, repo[branch]) for branch in branches]
+        self.render("repository/repositoryBranches.html", repository= repository, userUrl= userUrl, branches = brancheArray ) 
 
 handlers = [
     ('/', RepositoryHandler),
     ('/new', RepositoryNewHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)', RepositoryDetailHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)/tree-commit/([a-z\/A-Z]+)', RepositoryCommitHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)\.git', RepositoryCommandHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)\.git/info/refs', RepositoryInfoHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)\.git/git-upload-pack', RepositoryInfoHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)\.git/git-receive-pack', RepositoryReceiveHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)/tree/([a-zA-Z]+)/([\/a-zA-Z]+)', RepositoryTreeHandler),
-    ('/([a-zA-Z]+)/([a-zA-Z]+)/blob/([a-zA-Z]+)/([\/\.a-zA-Z]+)', RepositoryBlobHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)', RepositoryDetailHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/tree-commit/([a-z\/A-Z]+)', RepositoryMasterHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.git', RepositoryCommandHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.git/info/refs', RepositoryInfoHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.git/git-upload-pack', RepositoryInfoHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)\.git/git-receive-pack', RepositoryReceiveHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/tree/([a-zA-Z]+)/([\/a-zA-Z0-9]+)', RepositoryTreeHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/blob/([a-zA-Z]+)/([\/\.a-zA-Z0-9]+)', RepositoryBlobHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/commits/([a-zA-Z]+)', RepositoryCommitsHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/commit/([a-zA-Z0-9]+)', RepositoryCommitHandler),
+    ('/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/branches', RepositoryBranchesHandler),
 ]

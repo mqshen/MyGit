@@ -1,0 +1,104 @@
+{% extends "../base.html" %}
+{% from tornado.options import options %}
+
+{% block bodyClass %} logged_out  macintosh vis-public env-production  {% end %} 
+{% block body%}
+    <div class="hentry">
+        <div class="pagehead repohead instapaper_ignore readability-menu ">
+            <div class="container">
+                <div class="title-actions-bar">
+                    <h1 class="entry-title public">
+                        <span class="repo-label"><span>public</span></span>
+                        <span class="mega-octicon octicon-repo"></span>
+                        <span class="author vcard">
+                            <a href="/mqshen" class="url fn" itemprop="url" rel="author">
+                                <span itemprop="title">{{currentUser.url}}</span>
+                            </a>
+                        </span> /
+                        <strong><a href="/mqshen/MyTask" class="js-current-repository">{{repository.name}}</a></strong>
+                    </h1>
+                </div>
+                <ul class="tabs with-details-box">
+                    <li class="pulse-nav">
+                        <a href="/{{userUrl}}/{{repository.name}}/pulse" class="js-selected-navigation-item " rel="nofollow">
+                            <span class="octicon octicon-pulse"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}" class="js-selected-navigation-item selected">代码</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">网络</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">问题</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">统计</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="js-repo-pjax-container" class="container context-loader-container" data-pjax-container="">
+            <div class="empty-repo">
+                <div class="callout">
+                    <h2><strong>快速开始</strong> — 开始之前你需要做的事</h2>
+                    <div class="url-box js-url-box">
+                        <ul class="native-clones">
+                            <li>
+                                <a href="http://mac.github.com" class="button minibutton " icon_class="octicon-device-desktop">
+                                    <span class="octicon octicon-device-desktop"></span>Clone in Mac
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="clone-urls js-clone-urls ">
+                            <span class="http_clone_url clone-url-button js-clone-url-button selected">
+                                <a href="https://github.com/mqshen/MyTask.git" class="js-git-protocol-selector" data-permission="Read-Only">
+                                    HTTP
+                                </a>
+                            </span>
+                            <span class="clone-url">
+                                <input type="text" readonly="" spellcheck="false" class="url-field js-url-field" 
+                                value="{{options.domain}}/{{userUrl}}/{{repository.name}}.git">
+                            </span>
+                            <span class="clone-url-button">
+                                <span class="js-zeroclipboard url-box-clippy zeroclipboard-button" 
+                                    data-clipboard-text="{{options.domain}}/{{userUrl}}/{{repository.name}}.git" 
+                                    data-copied-hint="copied!" title="copy to clipboard">
+                                    <span class="octicon octicon-clippy"></span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <p class="bigmessage">
+                    你的资源库最好包含readme
+                </p>
+                <hr>
+                <div class="new-repo-cli-container markdown-body">
+                    <h3>创建新的资源库</h3>
+                    <pre>
+                        <code>
+touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin <span class="js-live-clone-url">{{options.domain}}/{{userUrl}}/{{repository.name}}.git</span>
+git push -u origin master
+                        </code>
+                    </pre>
+                    <h3>上传已有的资源库</h3>
+                    <pre>
+                        <code>
+git remote add origin <span class="js-live-clone-url">{{options.domain}}/{{userUrl}}/{{repository.name}}.git</span>
+git push -u origin master
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block script %}
+{% end %}

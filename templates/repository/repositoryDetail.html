@@ -1,6 +1,5 @@
 {% extends "../base.html" %}
 {% from tornado.options import options %}
-{% block title %}MyTask{% end %}
 
 {% block bodyClass %} logged_out  macintosh vis-public env-production  {% end %} 
 {% block body%}
@@ -35,7 +34,7 @@
                         <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">问题</a>
                     </li>
                     <li>
-                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">图形</a>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">统计</a>
                     </li>
                 </ul>
                 <div id="repo_details" class="metabox clearfix" style="">
@@ -146,12 +145,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/mqshen/MyTask/commits/master" class="js-selected-navigation-item tabnav-tab" >
+                    <a href="/{{userUrl}}/{{repository.name}}/commits/master" class="js-selected-navigation-item tabnav-tab" >
                         提交
                     </a>
                 </li>
                 <li>
-                    <a href="/{{userUrl}}/{{repository}}/branches" class="js-selected-navigation-item tabnav-tab" rel="nofollow">
+                    <a href="/{{userUrl}}/{{repository.name}}/branches" class="js-selected-navigation-item tabnav-tab" rel="nofollow">
                         分支<span class="counter ">1</span></a>
                 </li>
             </ul>
@@ -169,12 +168,36 @@
                                 </a>
                             </span>
                         </span>
-                        <span class="separator"> / </span>
                     </div>
                 </div>
                 <div class="frames" style="min-height: 335px;">
                     <div class="frame" data-type="tree">
                         <div class="bubble tree-browser-wrapper" id="trees">
+                            <div class="commit commit-tease js-details-container">
+                                <p class="commit-title ">
+                                    <a href="/{{userUrl}}/{{repository.name}}/commit/{{lastCommit.id}}" class="message">
+                                        {{lastCommit.message}}
+                                    </a> 
+                                </p>
+                                <div class="commit-meta">
+                                    <span class="js-zeroclipboard zeroclipboard-link" >
+                                        <span class="octicon octicon-clippy"></span>
+                                    </span>
+                                    <a href="/{{userUrl}}/{{repository.name}}/commit/{{lastCommit.id}}" class="sha-block" >latest commit 
+                                        <span class="sha">{{lastCommit.id}}</span>
+                                    </a>
+                                    <div class="authorship">
+                                        <img class="gravatar" height="20" src="/avatar/default" width="20">
+                                        <span class="author-name">
+                                            <a href="/{{lastCommit.author}}" data-skip-pjax="true" rel="contributor">{{lastCommit.author}}</a>
+                                        </span>
+                                        在
+                                        <time class="js-relative-date timeago" data-time="{{lastCommit.date}}" >
+                                        </time>
+                                        提交
+                                    </div>
+                                </div>
+                            </div>
                             <table class="tree-browser css-truncate" cellpadding="0" cellspacing="0">
                                 <thead>
                                 </thead>
@@ -184,10 +207,17 @@
                             </table>
                         </div>
                         <div id="files" class="bubble" style="display:none">
-                            <div class="file">
-                                <pre class="blob-wrapper data type-python js-blob-data" id="file_content">
-                                </pre>
+                            <div class="file" id="file_content">
                             </div>
+                        </div>
+                        <div id="readme" class="clearfix announce instapaper_body md">
+                            <span class="name">
+                                <span class="octicon octicon-book"></span>
+                                README.md
+                            </span>
+                            <article class="markdown-body entry-content" itemprop="mainContentOfPage">
+                            {{readme}}
+                            </article>
                         </div>
                     </div>
                 </div>
@@ -202,6 +232,8 @@ var $rowContainer = $('#file_container')
 var $fileContent = $('#file_content')
 var $fileDisplay = $('#files')
 var $treeDisplay = $('#trees')
+var $lastUrlButton
+var $lastButton
 function callback(data, fileType) {
     if(fileType === "tree") {
         $fileDisplay.hide()
@@ -212,7 +244,7 @@ function callback(data, fileType) {
             var file = data.content[i]
             var iconClass = "octicon-file-directory"
             var fileType = "tree"
-            if(file.type == 1) {
+            if(file.kind == 2) {
                 iconClass = "octicon-file-text"
                 fileType = "blob"
             }
@@ -224,9 +256,9 @@ function callback(data, fileType) {
                 + '" data-type="' + fileType + '"class="js-directory-link js-slide-to css-truncate-target" '
                 + 'id="44290cefe42924d04a92d99428a95f27-ddbd2bca48b8340ceaffdb95edecc1ec066b5ef1" '
                 + 'title="' + file.name + '" data-toggle="truncate">' + file.name + '</a></td>'
-                + '<td class="age"><time class="js-relative-date timeago" datetime="2013-05-18T06:21:21-07:00" ></time></td>'
-                + '<td class="message"><a href="/{{userUrl}}/{{repository.name}}/commit/" class="message"></a>'
-                + '[<span rel="author">GoldRatio</span>]'
+                + '<td class="age"><time class="js-relative-date timeago" data-time="' + file.changeset.date + '" ></time></td>'
+                + '<td class="message"><a href="/{{userUrl}}/{{repository.name}}/commit/' + file.changeset.raw_id + '" class="message">' + file.changeset.message 
+                + '</a>' + '[<span rel="author">' + file.changeset.author + '</span>]'
                 + '</td></tr>')
             $rowContainer.append($row)
         }
@@ -234,10 +266,26 @@ function callback(data, fileType) {
     else {
         $fileDisplay.show()
         $treeDisplay.hide()
-        $fileContent.text(data.fileContent)
+        var $file = $('<div class="meta"><div class="info">'
+            + '<span class="icon"><b class="octicon octicon-file-text"></b></span>'
+            + '<span class="mode" title="File Mode">' + data.name + '</span>'
+            + '<span>' + $.lily.format.formatFileSize(data.size) + '</span>'
+            + '</div>'
+            + '<div class="actions">'
+            + '</div>'
+        + '</div><div class="blob-wrapper data type-makefile js-blob-data">' + data.highlight + '</div>')
+        $fileContent.append($file)
+    }
+    $('.timeago').timeago()
+                        
+    $.lily.hideWait($('.frames'))
+    if($lastButton) {
+        $('.breadcrumb').append('<span class="separator"> / </span>')
+        $('.breadcrumb').append($lastButton)
     }
 }
 function queryFiles(path, fileType){
+    $.lily.showWait($('.frames'))
     $.lily.ajax({
         url : path,
 		type: 'post',
@@ -248,10 +296,17 @@ $rowContainer.data("doProcess", queryFiles)
 queryFiles('/{{userUrl}}/{{repository.name}}/tree-commit/master', "tree")
 
 $(document).on('click.truncate.data-api', '[data-toggle=truncate]', function (e) {
+    $('#readme').hide()
     e.preventDefault()
+    if($lastButton){
+        $lastButton.remove()
+        $('.breadcrumb').append($lastUrlButton)
+    }
     var $btn = $(e.target)
     var $target = $btn.closest('tbody')
     var url = $btn.attr("href")
+    $lastButton = $('<strong class="final-path">' + $btn.text() + '</strong>')
+    $lastUrlButton = $('<span itemscope=""><a href="' + url + '" data-toggle="truncate" class="js-slide-to" data-branch="master" data-direction="back" itemscope="url"><span itemprop="title">' + $btn.text() + '</span></a></span>')
     var fileType = $btn.attr("data-type")
     queryFiles(url, fileType)
 })
