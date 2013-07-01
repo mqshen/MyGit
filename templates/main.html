@@ -7,8 +7,22 @@
     <div id="dashboard">
         <div class="news">
         </div>
-        <div class="dashboard-sidebar">
-            <div class="repos" id="your_repos">
+        <div class="pagehead repohead instapaper_ignore readability-menu ">
+            <div class="container">
+                <ul class="tabs with-details-box">
+                    <li>
+                        <a href="/" class="js-selected-navigation-item selected">你的资源库</a>
+                    </li>
+                    <li>
+                        <a href="/" class="js-selected-navigation-item">你的关注</a>
+                    </li>
+                    <li>
+                        <a href="/" class="js-selected-navigation-item">回顾</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="dashboard">
                 <div class="top-bar">
                     <a href="/new" class="minibutton primary new-repo">
                         <span class="octicon octicon-repo-create"></span>
@@ -16,6 +30,7 @@
                     </a>
                     <h2>你的资源库<em>({{len(repositories)}})</em></h2>
                 </div>
+            <div class="repos" id="your_repos">
                 <ul id="repo_listing" class="repo_list js-repo-list">
                     {% for repository in repositories %}
                         <li class="public source">

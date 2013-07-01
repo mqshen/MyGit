@@ -24,6 +24,8 @@ def serialize(model):
             columns.extend(model.eagerRelation)
     elif hasattr(model, '__json__'):
         return model.__json__()
+    elif isinstance(model, dict):
+        return model
     else:
         columns = [c for c in model.__dict__]
         result = {}

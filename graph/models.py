@@ -6,7 +6,6 @@ Created on Feb 4, 2013
 from core.database import db
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from settings.models import organization_user_rel
 
 
 __all__ = ['Repository'] 
@@ -23,7 +22,5 @@ class Repository(db.Model):
     own_id = Column(Integer, ForeignKey('user.id'))    
     public = Column(Integer, default=0)
     createTime = Column(DateTime)
-    ownType = Column(Integer)
-    organizationId = Column(Integer, ForeignKey('organization.id'))
 
     users = relationship("User", secondary=repository_user_rel, backref="repositorys")

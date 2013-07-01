@@ -1,0 +1,115 @@
+{% extends "../base.html" %}
+{% from tornado.options import options %}
+
+{% block bodyClass %} logged_out  macintosh vis-public env-production  {% end %} 
+{% block body%}
+    <div class="hentry">
+        <div class="pagehead repohead instapaper_ignore readability-menu ">
+            <div class="container">
+                <div class="title-actions-bar">
+                    <h1 class="entry-title public">
+                        <span class="repo-label"><span>public</span></span>
+                        <span class="mega-octicon octicon-repo"></span>
+                        <span class="author vcard">
+                            <a href="/mqshen" class="url fn" itemprop="url" rel="author">
+                                <span itemprop="title">{{currentUser.url}}</span>
+                            </a>
+                        </span> /
+                        <strong><a href="/mqshen/MyTask" class="js-current-repository">{{repository.name}}</a></strong>
+                    </h1>
+                </div>
+                <ul class="tabs with-details-box">
+                    <li class="pulse-nav">
+                        <a href="/{{userUrl}}/{{repository.name}}/pulse" class="js-selected-navigation-item " rel="nofollow">
+                            <span class="octicon octicon-pulse"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}" class="js-selected-navigation-item ">代码</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">网络</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item">问题</a>
+                    </li>
+                    <li>
+                        <a href="/{{userUrl}}/{{repository.name}}/graphs" class="js-selected-navigation-item selected">统计</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="js-repo-pjax-container" class="container context-loader-container" data-pjax-container="">
+            <div id="contributors-master" class="graphs">
+            </div>
+            <div id="contributors" class="clearfix js-graph graph-canvas" data-url="/mbostock/d3/graphs/contributors-data">
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block includeScripts %}
+    <script src="{{ static_url("scripts/lib/d3.js")}}" type="text/javascript"></script>
+{% end %}
+{% block script %}
+$(function(){
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 170 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom").ticks(20);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left").ticks(4);
+
+var area = d3.svg.area()
+    .x(function(d) { return x(d.date); })
+    .y0(height)
+    .y1(function(d) { return y(d.value); });
+
+var svg = d3.select("#contributors-master").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("/{{userUrl}}/{{repository.name}}/contributeData", function(error, reponseData) {
+    var data = reponseData.content
+
+    data.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.value = +d.value;
+        console.log(d.value)
+    });
+
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "area")
+        .attr("d", area);
+    
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+    
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+});
+})
+
+{% end %}

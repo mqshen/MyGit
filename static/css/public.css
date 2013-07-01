@@ -95,10 +95,10 @@ box-shadow: none;
 content: '\f003';
 }
 .octicon-tools:before {
-content: '\f032';
+content: '\f031';
 }
 .octicon-log-out:before {
-content: '';
+content: '\f032';
 }
 .octicon-repo:before {
 content: '\f001';

@@ -27,7 +27,6 @@ class SigninForm(Form):
 class RegisterForm(Form):
     email = TextField('email')
     name = TextField('name')
-    teamTitle = TextField('teamTitle')
     password = TextField('password')
 
 class RegisterHandler(BaseHandler):
@@ -48,14 +47,11 @@ class RegisterHandler(BaseHandler):
                                form.password.data)).encode('utf-8'))
             password_md5 = m.hexdigest()
             user = User(email=form.email.data, password=password_md5, name=form.name.data, nickName=form.name.data, avatar='default')
-            team = Team(title=form.teamTitle.data, createTime=datetime.now())
 
-            teamUserRel = TeamUserRel(privilege=2, member=user, team=team)
-
-            db.session.add(teamUserRel)
+            db.session.add(user)
             db.session.commit()
             self.set_secure_cookie("sid", self.session.sessionid)
-            self.session["user"] = UserObj(user, team.id)
+            self.session["user"] = UserObj(user)
             self.redirect("/")
 
 class LoginHandler(BaseHandler):

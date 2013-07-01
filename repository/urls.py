@@ -5,6 +5,7 @@ Created on Feb 4, 2013
 '''
 import os
 from .models import Repository
+from settings.models import Organization 
 from user.models import User
 import logging
 import tornado
@@ -27,16 +28,26 @@ from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 from lib.helpers import CodeHtmlFormatter 
 
+from sqlalchemy.orm import aliased
+
+Organizationalias = aliased(Organization)
+
 class RepositoryForm(Form):
     name = TextField('name')
     description = TextField('description')
-    public = BooleanField('public')
+    public = IntField('public')
+    ownType = IntField('ownType')
+    teamId = TextField('teamId')
+
 
 class RepositoryHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         currentUser = self.current_user
-        repositories = Repository.query.join(Repository.users).filter(User.id==currentUser.id).all()
+        repositories = Repository.query.join(Repository.users).filter(User.id==currentUser.id, Repository.public==0, Repository.ownType==0).all()
+        team_repositories = Repository.query.join(Organization.users, Organizationalias ).filter(Repository.public==0, Repository.ownType==1, 
+                User.id==currentUser.id).all()
+        repositories += team_repositories 
         self.render("main.html", repositories = repositories )
 
     def post(self):
@@ -52,7 +63,8 @@ class RepositoryHandler(BaseHandler):
 
         now = datetime.now()
         repository = Repository(name=form.name.data, description=form.description.data, 
-                own_id=currentUser.id, createTime= now, public= form.public.data, users= users)
+                own_id=currentUser.id, createTime= now, public= form.public.data, users= users,
+                ownType=form.ownType.data, organizationId =form.teamId.data)
         db.session.add(repository)
 
         db.session.commit()
@@ -65,7 +77,10 @@ class RepositoryNewHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        self.render("repository/newRepository.html")
+        currentUser = self.current_user
+        user = User.query.filter_by(id= currentUser.id).first()
+
+        self.render("repository/newRepository.html", organizations= user.organizations)
 
     @tornado.web.authenticated
     def post(self):

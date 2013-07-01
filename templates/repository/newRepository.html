@@ -55,7 +55,7 @@
                     <!-- privacy options -->
                     <div class="form-checkbox">
                         <label>
-                            <input name="public" value="true" type="radio" checked="checked" class="js-privacy-toggle" tabindex="5" data-toggle="remote">
+                            <input name="public" value="1" type="radio" checked="checked" class="js-privacy-toggle" tabindex="5" data-toggle="remote">
                             公共
                         </label>
                         <span class="mega-octicon octicon-repo"></span>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="form-checkbox">
                         <label>
-                            <input name="public" value="false" type="radio" class="js-privacy-toggle" data-toggle="remote">
+                            <input name="public" value="0" type="radio" class="js-privacy-toggle" data-toggle="remote">
                             私有
                         </label>
                         <span class="mega-octicon octicon-lock"></span>
@@ -74,6 +74,46 @@
                         </span>
                     </div>
                 </hr>
+                <div id="private_info" style="display:none">
+                    <hr >
+                        <!-- team select box -->
+                        <!-- privacy options -->
+                        <div class="form-checkbox">
+                            <label>
+                                <input name="ownType" value="0" type="radio" checked="checked" class="js-privacy-toggle" tabindex="5" data-toggle="remote">
+                                个人
+                            </label>
+                            <span class="note">
+                                只有你可以访问资源库
+                            </span>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                <input name="ownType" value="1" type="radio" class="js-privacy-toggle" tabindex="5" data-toggle="remote">
+                                团队
+                            </label>
+                            <span class="note">
+                                只有团队可以访问你的资源库
+                            </span>
+                        </div>
+                        <dl class="form" style="display:none" id="team_select">
+                            <dt>
+                                <label for="repository_description">团队</label>
+                            </dt>
+                            <dd>
+                                <div class="fieldWithErrors">
+                                    <label>
+                                        <select name="teamId" data-toggle="remote">
+                                            {% for organization in organizations %}
+                                                <option value="{{organization.id}}">{{organization.name}}</option>
+                                            {% end %}
+                                        </select>
+                                    </label>
+                                </div>
+                            </dd>
+                        </dl>
+                    </hr>
+                </div>
             </div>
             <div class="rule"></div>
             <button data-toggle="submit" class="button primary first-in-line" data-disable-with="正在创建..." tabindex="7" >
@@ -84,5 +124,21 @@
 {% end %}
 
 {% block script %}
+$(function(){
+$('[name=public]').click(function(){
+var $this = $(this)
+if($this.val() === '0')
+    $('#private_info').show()
+else
+    $('#private_info').hide()
+})
+$('[name=ownType]').click(function(){
+var $this = $(this)
+if($this.val() === '1')
+    $('#team_select').show()
+else
+    $('#team_select').hide()
+})
+})
 
 {% end %}

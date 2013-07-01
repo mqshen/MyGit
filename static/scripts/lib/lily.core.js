@@ -147,7 +147,7 @@ $.extend( $.lily, {
 
         $('[data-toggle=remote],[data-toggle=datepick]' , sourceElement).each(function () {
     		var $this = $(this)
-            if($this.attr("type") == "checkbox" && !$this.attr("checked"))
+            if(($this.attr("type") == "checkbox" || $this.attr("type") == "radio") && !$this.attr("checked"))
                 return
             var value = $this.val()
             if(value && !$.lily.format.isEmpty(value) ){

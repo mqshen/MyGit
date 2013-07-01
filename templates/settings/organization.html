@@ -1,0 +1,100 @@
+{% extends "../base.html" %}
+
+{% block title %}MyTask{% end %}
+
+{% block bodyClass %} logged_in page-dashboard macintosh  env-production {% end %} 
+{% block body%}
+
+<div id="page-settings" class="context-loader-container" data-pjax-container="">
+    <div id="settings-nav" class="menu-container js-settings-next">
+        <ul class="menu accordion js-settings-pjax" data-pjax="">
+            <li class="section">
+                <a href="/settings/profile" class="section-head">
+                    <img height="20" src="/avatar/" width="20">
+                    {{currentUser.name}}
+                </a>
+                <ul class="expanded section-nav">
+                    <li>
+                        <a href="/settings/profile" class="js-selected-navigation-item " data-selected-links=" /settings/profile">基本信息</a>
+                    </li>
+                    <li>
+                        <a href="/settings/organizations" class="js-selected-navigation-item selected" data-selected-links=" /settings/organizations">团队</a>
+                    </li>
+              </ul>
+            </li>
+      </ul>
+    </div>
+
+    <div class="settings-content">
+        <div id="team_info">
+            <div class="orgs-settings">
+                <a href="javascript:;" id="create_group_button" class="button">添加用户</a>
+            </div>
+
+            <div class="boxed-group">
+                <h3>团队</h3>
+                <div class="boxed-group-inner">
+                    <ul class="boxed-group-list standalone">
+                        {% for user in organization.users %}
+                        <li class="clearfix">
+                          <img height="20" src="" width="20">
+                          <strong>
+                              {{user.name}}
+                          </strong>
+                          {{user.email}}
+                        </li>
+                        {% end %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="boxed-group" style="opacity: 0" id="team_editor">
+            <h3>用户信息</h3>
+            <form action="/settings/organizations/{{organization.url}}" method="post">
+            <div class="boxed-group-inner clearfix">
+                <dl id="invitees" class="form autosave successful" data-name="profile_name" data-action="/users/mqshen">
+                    <dt><label>email</label></dt>
+                    <dd>
+                        <input type="text" value="" name="email[]" tabindex="1" data-toggle="remote">
+                    </dd>
+                </dl>
+                <p>
+                    <button data-toggle="submit" data-disable-with="正在添加..." class="button primary" tabindex="4">添加</button>
+                    <a href="javascript:;" class="button " tabindex="4" id="cancel_group_button">取消</a>
+                </p>
+            </div>
+            </form>
+        </div>
+    </div>
+{% end %}
+
+{% block script %}
+
+$(function(){
+
+$('#create_group_button').click(function(){
+    $("#team_info").animate({
+        top: -170,
+        opacity: 0,
+    }, 500);
+    $("#team_editor").animate({
+        top: 0,
+        opacity: 1,
+    }, 500);
+})
+
+$('#cancel_group_button').click(function() {
+    $("#team_editor").animate({
+        top: 300,
+        opacity: 0,
+    }, 500);
+    $("#team_info").animate({
+        top: 0,
+        opacity: 1,
+    }, 500);
+})
+$('#invitees').autoAdd()
+})
+{% end %}
+

@@ -1,0 +1,57 @@
+{% extends "../base.html" %}
+
+{% block title %}MyTask{% end %}
+
+{% block bodyClass %} logged_in page-dashboard macintosh  env-production {% end %} 
+{% block body%}
+
+<div id="page-settings" class="context-loader-container" data-pjax-container="">
+    <div id="settings-nav" class="menu-container js-settings-next">
+        <ul class="menu accordion js-settings-pjax" data-pjax="">
+            <li class="section">
+                <a href="/settings/profile" class="section-head">
+                    <img height="20" src="/avatar/" width="20">
+                    {{currentUser.name}}
+                </a>
+                <ul class="expanded section-nav">
+                    <li>
+                        <a href="/settings/profile" class="js-selected-navigation-item selected" data-selected-links=" /settings/profile">基本信息</a>
+                    </li>
+                    <li>
+                        <a href="/settings/organizations" class="js-selected-navigation-item" data-selected-links=" /settings/organizations">团队</a>
+                    </li>
+              </ul>
+            </li>
+      </ul>
+    </div>
+
+    <div class="settings-content">
+        <div class="boxed-group">
+            <h3>基本信息</h3>
+            <div class="boxed-group-inner clearfix">
+                <dl class="form autosave successful" data-name="profile_name" data-action="/users/mqshen">
+                    <dt><label>名字</label></dt>
+                    <dd>
+                    <input type="text" value="{{currentUser.name}}" tabindex="2">
+                    </dd>
+                </dl>
+
+                <dl class="form autosave " data-name="profile_email" data-action="/users/mqshen">
+                    <dt><label>Email (公开)</label></dt>
+                    <dd>
+                    <input type="text" value="{{currentUser.email}}" tabindex="2">
+                    </dd>
+                </dl>
+
+                <p>
+                    <button class="button primary" tabindex="4">保存</button>
+                </p>
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block script %}
+
+{% end %}
+
